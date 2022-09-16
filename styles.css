@@ -1,0 +1,145 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: "bungee";
+	src: url(fonts/BungeeInline-Regular.ttf);
+	font-family: "karasuma";
+	src: url(fonts/KarasumaGothic-Regular.otf);
+}
+
+button {
+	cursor: pointer;
+}
+
+body {
+	font-family: karasuma, system-ui, -apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+		"Helvetica Neue", sans-serif;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	background-color: #0ea5e9;
+	height: 100vh;
+}
+
+header {
+	margin-top: 50px;
+	margin-bottom: 20px;
+	font-size: 2.5rem;
+
+	font-family: karasuma;
+}
+
+main {
+	display: grid;
+	justify-items: center;
+}
+
+.card-container {
+	display: flex;
+	gap: 100px;
+	margin-bottom: 100px;
+}
+
+.card-1,
+.card-2 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	background-color: #2d3e59;
+	font-size: 1.5rem;
+	padding: 15px;
+	width: 400px;
+	height: 300px;
+	border-radius: 10px;
+}
+
+.player1-title,
+.player2-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #7dd3fc;
+	background-color: #475569;
+	border-radius: 5px;
+	border: 2px solid #7dd3fc;
+	width: 200px;
+	height: 50px;
+	margin-bottom: 45px;
+}
+
+.symbol1,
+.symbol2 {
+	margin-left: 10px;
+	font-weight: 600;
+}
+
+input {
+	line-height: 35px;
+	width: 80%;
+	background-color: transparent;
+	color: #7dd3fc;
+	padding-left: 10px;
+	font-size: 1.3rem;
+	border: 2px solid #7dd3fc;
+}
+
+input:focus {
+	outline: none;
+}
+
+input::placeholder {
+	font-size: 1.3rem;
+}
+
+.error1,
+.error2 {
+	font-size: 0.85rem;
+	font-weight: bold;
+	color: red;
+}
+
+.selection-1,
+.selection-2 {
+	display: flex;
+	gap: 15px;
+}
+
+.selection-1 > button,
+.selection-2 > button {
+	width: 150px;
+	height: 50px;
+	border-radius: 5px;
+	border: 2px solid #7dd3fc;
+	color: #7dd3fc;
+	background-color: transparent;
+	font-size: 1.3rem;
+	margin-top: 25px;
+}
+.selection-1 > button:hover,
+.selection-2 > button:hover {
+	background-color: #313132;
+}
+
+.selection-1 > button:focus,
+.selection-2 > button:focus {
+	background-color: #0369a1;
+}
+
+.start-game {
+	width: 350px;
+	height: 100px;
+	border-style: none;
+	border-radius: 10px;
+	font-size: 1.5rem;
+	color: white;
+	background-color: transparent;
+	border: 2px solid white;
+	/* background-color: #1e90ff; */
+}
