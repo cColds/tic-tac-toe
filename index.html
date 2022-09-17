@@ -18,27 +18,68 @@
             <div class="card-container">
                 <div class="card-1">
                     <div class="player1-title">Player 1 <span class="symbol1">(✕)</span></div>
+                    <div class="name1">NAME</div>
                     <input type="text" placeholder="Enter a Name" id="input1">
                     <div class="error1">ㅤ</div>
                     <div class="selection-1">
-                        <button class="player-select-1">Player</button>
-                        <button class="ai-select-1">AI</button>
+                        <div class="mode1">MODE</div>
+                        <div class="button-container1">
+                            <button class="player-select-1">Player</button>
+                            <button class="ai-select-1">AI</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-2">
                     <div class="player2-title">Player 2 <span class="symbol2">(O)</span></div>
+                    <div class="name2">NAME</div>
                     <input type="text" placeholder="Enter a Name" id="input2">
+
                     <div class="error2">ㅤ</div>
                     <div class="selection-2">
-                        <button class="player-select-2">Player</button>
-                        <button class="ai-select-2">AI</button>
+                        <div class="mode2">MODE</div>
+                        <div class="button-container2">
+                            <button class="player-select-2">Player</button>
+                            <button class="ai-select-2">AI</button>
+                        </div>
                     </div>
                 </div>
             </div>
             </div>
             <button class="start-game">Start Game</button>
-
         </main>
+        <div class="game-container hide">
+            <div class="info-container">
+                <div class="gamePlayerOne">
+                    <div class="playerOneInfo">Player 1</div>
+                    <div class="playerOneWinCount">Win Count: 0</div>
+                </div>
+                <div class="round-winner-container">
+                    <div class="rounds">Round 1</div>
+                    <div class="winner-title">ㅤ</div>
+                    <div class="winner">ㅤ</div>
+                </div>
+                <div class="gamePlayerTwo">
+                    <div class="playerTwoInfo">Player 2</div>
+                    <div class="playerTwoWinCount">Win Count: 0</div>
+                </div>
+            </div>
+            <div class="board">
+                <div data-board="0" class="pointerEvents unit"></div>
+                <div data-board="1" class="pointerEvents unit"></div>
+                <div data-board="2" class="pointerEvents unit"></div>
+                <div data-board="3" class="pointerEvents unit"></div>
+                <div data-board="4" class="pointerEvents unit"></div>
+                <div data-board="5" class="pointerEvents unit"></div>
+                <div data-board="6" class="pointerEvents unit"></div>
+                <div data-board="7" class="pointerEvents unit"></div>
+                <div data-board="8" class="pointerEvents unit"></div>
+            </div>
+            <div class="button-container">
+                <button class="play">Play Again</button>
+                <button class="home">Home</button>
+            </div>
+        </div>
+
     </body>
 
 </html>

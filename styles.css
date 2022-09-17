@@ -22,22 +22,27 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-
 	background-color: #0ea5e9;
 	height: 100vh;
 }
 
+/* HEADER */
+
 header {
-	margin-top: 50px;
+	margin-top: 15px;
 	margin-bottom: 20px;
 	font-size: 2.5rem;
-
 	font-family: karasuma;
 }
+
+/* MAIN AND CARDS */
 
 main {
 	display: grid;
 	justify-items: center;
+}
+main.hide {
+	display: none;
 }
 
 .card-container {
@@ -60,6 +65,8 @@ main {
 	border-radius: 10px;
 }
 
+/*HOMESCREEN CARDS*/
+
 .player1-title,
 .player2-title {
 	display: flex;
@@ -71,13 +78,20 @@ main {
 	border: 2px solid #7dd3fc;
 	width: 200px;
 	height: 50px;
-	margin-bottom: 45px;
+	margin-bottom: 5px;
 }
 
 .symbol1,
 .symbol2 {
 	margin-left: 10px;
 	font-weight: 600;
+}
+
+.name1,
+.name2,
+.mode1,
+.mode2 {
+	color: #7dd3fc;
 }
 
 input {
@@ -98,21 +112,30 @@ input::placeholder {
 	font-size: 1.3rem;
 }
 
+/* ERROR CHECK */
+
 .error1,
 .error2 {
-	font-size: 0.85rem;
 	font-weight: bold;
+	font-size: 1rem;
 	color: red;
 }
 
+/* MODES */
+
+.mode1,
+.mode2 {
+	display: flex;
+	justify-content: center;
+}
 .selection-1,
 .selection-2 {
 	display: flex;
-	gap: 15px;
+	flex-direction: column;
+	justify-content: center;
 }
-
-.selection-1 > button,
-.selection-2 > button {
+.button-container1 > button,
+.button-container2 > button {
 	width: 150px;
 	height: 50px;
 	border-radius: 5px;
@@ -120,15 +143,18 @@ input::placeholder {
 	color: #7dd3fc;
 	background-color: transparent;
 	font-size: 1.3rem;
-	margin-top: 25px;
+	margin-top: 15px;
 }
 .selection-1 > button:hover,
 .selection-2 > button:hover {
 	background-color: #313132;
 }
 
-.selection-1 > button:focus,
-.selection-2 > button:focus {
+#selectedOne {
+	background-color: #0369a1;
+}
+
+#selectedTwo {
 	background-color: #0369a1;
 }
 
@@ -141,5 +167,133 @@ input::placeholder {
 	color: white;
 	background-color: transparent;
 	border: 2px solid white;
-	/* background-color: #1e90ff; */
+}
+
+/* GAME AREA */
+
+.board {
+	display: grid;
+	justify-items: center;
+	align-items: center;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 10px;
+	margin-top: 30px;
+}
+
+.game-container.hide {
+	display: none;
+}
+
+.board > div {
+	width: 200px;
+	height: 200px;
+	background-color: white;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 5rem;
+	font-weight: bold;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* PLAYER INFO */
+
+.info-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.playerOneInfo,
+.playerTwoInfo {
+	font-size: 1.5rem;
+	background-color: #10b981;
+	width: 180px;
+	height: 70px;
+	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 2px solid white;
+}
+
+.playerOneInfo.turn {
+	transform: scale(1.3);
+	border: 2px solid #38bdf8;
+}
+.playerTwoInfo.turn {
+	transform: scale(1.3);
+	border: 2px solid #38bdf8;
+}
+
+.button-container {
+	display: flex;
+	gap: 35px;
+	margin-top: 35px;
+	justify-content: center;
+}
+
+.button-container > button {
+	border: none;
+	width: 250px;
+	height: 75px;
+	border-radius: 5px;
+	background-color: transparent;
+	color: white;
+	font-size: 1.5rem;
+	border: 2px solid white;
+}
+
+.gamePlayerOne,
+.gamePlayerTwo {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+}
+
+.playerOneWinCount,
+.playerTwoWinCount {
+	width: 180px;
+	height: 55px;
+	background-color: #10b981;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	font-size: 1.1rem;
+	border: 2px solid #a5f3fc;
+}
+
+.rounds {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: orange;
+	width: 200px;
+	height: 75px;
+	font-size: 1.5rem;
+	font-weight: bold;
+	border-radius: 5px;
+}
+
+.round-winner-container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.winner-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.winner {
+	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.pointerEvents {
+	pointer-events: none;
 }
