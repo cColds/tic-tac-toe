@@ -1,103 +1,73 @@
-const ModuleOne = (function () {
+const menu = (function () {
 	const mainMenu = document.querySelector("main");
-	const playerSelectedOne = document.querySelector(".player-select-1");
-	const aiSelectedOne = document.querySelector(".ai-select-1");
-	const playerSelectedTwo = document.querySelector(".player-select-2");
-	const aiSelectedTwo = document.querySelector(".ai-select-2");
-	const errorOne = document.querySelector(".error1");
-	const errorTwo = document.querySelector(".error2");
 	const startGame = document.querySelector(".start-game");
 	const game = document.querySelector(".game-container");
-	const playerOneInfo = document.querySelector(".playerOneInfo");
-	const playerTwoInfo = document.querySelector(".playerTwoInfo");
 	const homeButton = document.querySelector(".home");
 	const inputOne = document.querySelector("#input1");
 	const inputTwo = document.querySelector("#input2");
-	let clickedOne = false;
-	let clickedTwo = false;
-	playerSelectedOne.addEventListener("click", (e) => {
-		if (aiSelectedOne.id) aiSelectedOne.setAttribute("id", "");
-		e.target.setAttribute("id", "selectedOne");
-		clickedOne = true;
-	});
+	const playerOneInfo = document.querySelector(".playerOneInfo");
+	const playerTwoInfo = document.querySelector(".playerTwoInfo");
+	homeButton.addEventListener("click", () => window.location.reload());
 
-	aiSelectedOne.disabled = true;
-	aiSelectedTwo.disabled = true;
+	let playerOneMode = "Player";
+	let playerTwoMode = "Player";
+	let players = [];
 
-	aiSelectedOne.addEventListener("click", (e) => {
-		if (playerSelectedOne.id) playerSelectedOne.setAttribute("id", "");
-		e.target.setAttribute("id", "selectedOne");
-		clickedOne = true;
-	});
-
-	playerSelectedTwo.addEventListener("click", (e) => {
-		if (aiSelectedTwo.id) aiSelectedTwo.setAttribute("id", "");
-		e.target.setAttribute("id", "selectedTwo");
-		clickedTwo = true;
-	});
-
-	aiSelectedTwo.addEventListener("click", (e) => {
-		if (playerSelectedTwo.id) playerSelectedTwo.setAttribute("id", "");
-		e.target.setAttribute("id", "selectedTwo");
-		clickedTwo = true;
-	});
-
-	homeButton.addEventListener("click", () => {
-		window.location.reload();
-	});
-
-	function validateInputs() {
-		if (inputOne.value && inputTwo.value && clickedOne && clickedTwo) {
-			mainMenu.classList.toggle("hide");
-			game.classList.toggle("hide");
-			playerOneInfo.textContent = inputOne.value;
-			playerTwoInfo.textContent = inputTwo.value;
-		} else {
-			errorOne.textContent = "*Fill out a name and choose a mode";
-			errorTwo.textContent = "*Fill out a name and choose a mode";
-		}
+	function showGameboard() {
+		if (!inputOne.value) inputOne.value = "Player 1";
+		if (!inputTwo.value) inputTwo.value = "Player 2";
+		playerOneInfo.textContent = inputOne.value;
+		playerTwoInfo.textContent = inputTwo.value;
+		mainMenu.classList.toggle("hide");
+		game.classList.toggle("hide");
+		pushPlayer();
 	}
 
-	startGame.addEventListener("click", validateInputs);
+	function pushPlayer() {
+		const playerOne = createPlayer(inputOne.value, "X", playerOneMode);
+		const playerTwo = createPlayer(inputTwo.value, "O", playerTwoMode);
+		players.push(playerOne, playerTwo);
+	}
 
-	return { inputOne, inputTwo };
+	startGame.addEventListener("click", showGameboard);
+
+	return { players };
 })();
 
 const gameBoardModule = (function () {
 	let gameBoard = ["", "", "", "", "", "", "", "", ""];
+
 	const playerOne = "X";
 	const playerTwo = "O";
 	const winnerTitle = document.querySelector(".winner-title");
 	const winner = document.querySelector(".winner");
 	const rounds = document.querySelector(".rounds");
 	const playAgain = document.querySelector(".play");
-	let round = 1;
 	const playerOneWins = document.querySelector(".playerOneWinCount");
 	const playerTwoWins = document.querySelector(".playerTwoWinCount");
-	let playerOneWinCount = 0;
-	let playerTwoWinCount = 0;
-
-	let turn = "";
 	const board = document.querySelector(".board");
-	let children = board.children;
-	const pointerEvents = document.querySelectorAll(".pointerEvents");
 	let unit = document.querySelectorAll(".unit");
-	for (const node of children) {
-		node.classList.toggle("pointerEvents");
-		node.addEventListener("click", (e) => {
-			if (!gameBoard[e.target.dataset.board]) {
-				if (!turn) {
-					turn = playerOne;
-					e.target.textContent = turn;
-					gameBoard[e.target.dataset.board] = turn;
-				} else if (turn === playerOne) {
+	let round = 1;
+	let turn;
+	function playerStartsFirst() {
+		turn = round;
+		if (turn % 2 !== 0) turn = playerOne;
+		else turn = playerTwo;
+	}
+	playerStartsFirst();
+
+	for (const square of board.children) {
+		square.classList.toggle("pointerEvents");
+		square.addEventListener("click", () => {
+			if (!gameBoard[square.dataset.board]) {
+				if (turn === playerOne) {
+					square.textContent = turn;
+					gameBoard[square.dataset.board] = turn;
 					turn = playerTwo;
-					e.target.textContent = turn;
-					gameBoard[e.target.dataset.board] = turn;
 				} else {
+					square.textContent = turn;
+					gameBoard[square.dataset.board] = turn;
 					turn = playerOne;
-					e.target.textContent = turn;
-					gameBoard[e.target.dataset.board] = turn;
 				}
 			}
 			boardValidity();
@@ -110,53 +80,52 @@ const gameBoardModule = (function () {
 		rounds.textContent = `Round ${(round += 1)}`;
 		winnerTitle.textContent = "ㅤ";
 		winner.textContent = "ㅤ";
+		playerStartsFirst();
 		gameBoard = ["", "", "", "", "", "", "", "", ""];
-		console.log(unit.length);
 		for (let i = 0; i < unit.length; i++) {
 			unit[i].textContent = "";
 		}
-		toggleEvent();
+		if (unit[0].classList.contains("pointerEvents")) toggleEvent();
 	}
+
+	let playerOneWinCount = 0;
+	let playerTwoWinCount = 0;
 
 	function boardValidity() {
-		if (playerOneBoard()) {
+		if (playerOneWin()) {
 			winnerTitle.textContent = "The winner is";
-			winner.textContent = ModuleOne.inputOne.value;
+			winner.textContent = menu.players[0].name;
+
 			playerOneWins.textContent = `Win Count: ${(playerOneWinCount += 1)}`;
 			toggleEvent();
-		} else if (playerTwoBoard()) {
+		} else if (playerTwoWin()) {
 			winnerTitle.textContent = "The winner is";
-			winner.textContent = ModuleOne.inputTwo.value;
+			winner.textContent = menu.players[1].name;
 			playerTwoWins.textContent = `Win Count: ${(playerTwoWinCount += 1)}`;
 			toggleEvent();
-		} else {
-			if (arrayBoard()) {
-				winnerTitle.textContent = "It's a draw";
-				toggleEvent();
-			}
+		} else if (noWinners()) {
+			winnerTitle.textContent = "It's a draw";
+			toggleEvent();
 		}
 	}
 
-	function arrayBoard() {
-		let validBoardLength = 0;
+	function noWinners() {
+		let isBoardPositionTaken = 0;
 		for (let i = 0; i < gameBoard.length; i++) {
-			if (gameBoard[i]) validBoardLength++;
+			if (gameBoard[i]) isBoardPositionTaken++;
 		}
-		if (validBoardLength == 9) return true;
+		if (isBoardPositionTaken === 9) return true;
 	}
 
 	function toggleEvent() {
-		for (let i = 0; i < pointerEvents.length; i++) {
-			pointerEvents[i].classList.toggle("pointerEvents");
+		for (let i = 0; i < unit.length; i++) {
+			unit[i].classList.toggle("pointerEvents");
 		}
 	}
 
-	function playerOneBoard() {
-		if (checkWin(playerOne)) return true;
-	}
-	function playerTwoBoard() {
-		if (checkWin(playerTwo)) return true;
-	}
+	const playerOneWin = () => checkWin(playerOne);
+	const playerTwoWin = () => checkWin(playerTwo);
+
 	function checkWin(player) {
 		if (
 			// check row
@@ -190,3 +159,7 @@ const gameBoardModule = (function () {
 			return true;
 	}
 })();
+
+function createPlayer(name, symbol, mode) {
+	return { name, symbol, mode };
+}

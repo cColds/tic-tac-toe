@@ -61,7 +61,8 @@ main.hide {
 	font-size: 1.5rem;
 	padding: 15px;
 	width: 400px;
-	height: 300px;
+	height: 350px;
+
 	border-radius: 10px;
 }
 
@@ -78,6 +79,7 @@ main.hide {
 	border: 2px solid #7dd3fc;
 	width: 200px;
 	height: 50px;
+	margin-top: 25px;
 	margin-bottom: 5px;
 }
 
@@ -151,11 +153,11 @@ input::placeholder {
 }
 
 #selectedOne {
-	background-color: #0369a1;
+	background-color: #0369a1 !important;
 }
 
 #selectedTwo {
-	background-color: #0369a1;
+	background-color: #0369a1 !important;
 }
 
 .start-game {
