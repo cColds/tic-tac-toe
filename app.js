@@ -27,6 +27,7 @@ const menu = (function () {
 		const playerOne = createPlayer(inputOne.value, "X", playerOneMode);
 		const playerTwo = createPlayer(inputTwo.value, "O", playerTwoMode);
 		players.push(playerOne, playerTwo);
+		console.log(playerOne, playerTwo);
 	}
 
 	startGame.addEventListener("click", showGameboard);
@@ -34,9 +35,12 @@ const menu = (function () {
 	return { players };
 })();
 
-const gameBoardModule = (function () {
+const Gameboard = (function () {
 	let gameBoard = ["", "", "", "", "", "", "", "", ""];
+	return { gameBoard };
+})();
 
+const playGame = (function () {
 	const playerOne = "X";
 	const playerTwo = "O";
 	const winnerTitle = document.querySelector(".winner-title");
@@ -49,6 +53,7 @@ const gameBoardModule = (function () {
 	let unit = document.querySelectorAll(".unit");
 	let round = 1;
 	let turn;
+
 	function playerStartsFirst() {
 		turn = round;
 		if (turn % 2 !== 0) turn = playerOne;
@@ -59,18 +64,18 @@ const gameBoardModule = (function () {
 	for (const square of board.children) {
 		square.classList.toggle("pointerEvents");
 		square.addEventListener("click", () => {
-			if (!gameBoard[square.dataset.board]) {
+			if (!Gameboard.gameBoard[square.dataset.board]) {
 				if (turn === playerOne) {
 					square.textContent = turn;
-					gameBoard[square.dataset.board] = turn;
+					Gameboard.gameBoard[square.dataset.board] = turn;
 					turn = playerTwo;
 				} else {
 					square.textContent = turn;
-					gameBoard[square.dataset.board] = turn;
+					Gameboard.gameBoard[square.dataset.board] = turn;
 					turn = playerOne;
 				}
 			}
-			boardValidity();
+			checkWinner();
 		});
 	}
 
@@ -81,80 +86,75 @@ const gameBoardModule = (function () {
 		winnerTitle.textContent = "ㅤ";
 		winner.textContent = "ㅤ";
 		playerStartsFirst();
-		gameBoard = ["", "", "", "", "", "", "", "", ""];
-		for (let i = 0; i < unit.length; i++) {
-			unit[i].textContent = "";
-		}
-		if (unit[0].classList.contains("pointerEvents")) toggleEvent();
+		Gameboard.gameBoard = ["", "", "", "", "", "", "", "", ""];
+		unit.forEach((item) => (item.textContent = ""));
+		if (unit[0].classList.contains("pointerEvents")) toggleUnitEvents();
 	}
 
 	let playerOneWinCount = 0;
 	let playerTwoWinCount = 0;
 
-	function boardValidity() {
+	function checkWinner() {
 		if (playerOneWin()) {
 			winnerTitle.textContent = "The winner is";
 			winner.textContent = menu.players[0].name;
-
 			playerOneWins.textContent = `Win Count: ${(playerOneWinCount += 1)}`;
-			toggleEvent();
+			toggleUnitEvents();
 		} else if (playerTwoWin()) {
 			winnerTitle.textContent = "The winner is";
 			winner.textContent = menu.players[1].name;
 			playerTwoWins.textContent = `Win Count: ${(playerTwoWinCount += 1)}`;
-			toggleEvent();
+			toggleUnitEvents();
 		} else if (noWinners()) {
 			winnerTitle.textContent = "It's a draw";
-			toggleEvent();
+			toggleUnitEvents();
 		}
 	}
 
 	function noWinners() {
 		let isBoardPositionTaken = 0;
-		for (let i = 0; i < gameBoard.length; i++) {
-			if (gameBoard[i]) isBoardPositionTaken++;
-		}
+		Gameboard.gameBoard.forEach((position) => {
+			if (position) isBoardPositionTaken++;
+		});
 		if (isBoardPositionTaken === 9) return true;
 	}
 
-	function toggleEvent() {
-		for (let i = 0; i < unit.length; i++) {
-			unit[i].classList.toggle("pointerEvents");
-		}
+	function toggleUnitEvents() {
+		unit.forEach((item) => item.classList.toggle("pointerEvents"));
 	}
 
-	const playerOneWin = () => checkWin(playerOne);
-	const playerTwoWin = () => checkWin(playerTwo);
+	const playerOneWin = () => checkPlayerWon(playerOne);
+	const playerTwoWin = () => checkPlayerWon(playerTwo);
 
-	function checkWin(player) {
+	function checkPlayerWon(player) {
 		if (
 			// check row
-			(player === gameBoard[0] &&
-				player === gameBoard[1] &&
-				player === gameBoard[2]) ||
-			(player === gameBoard[3] &&
-				player === gameBoard[4] &&
-				player === gameBoard[5]) ||
-			(player === gameBoard[6] &&
-				player === gameBoard[7] &&
-				player === gameBoard[8]) ||
+			(player === Gameboard.gameBoard[0] &&
+				player === Gameboard.gameBoard[1] &&
+				player === Gameboard.gameBoard[2]) ||
+			(player === Gameboard.gameBoard[3] &&
+				player === Gameboard.gameBoard[4] &&
+				player === Gameboard.gameBoard[5]) ||
+			(player === Gameboard.gameBoard[6] &&
+				player === Gameboard.gameBoard[7] &&
+				player === Gameboard.gameBoard[8]) ||
 			// check column
-			(player === gameBoard[0] &&
-				player === gameBoard[3] &&
-				player === gameBoard[6]) ||
-			(player === gameBoard[1] &&
-				player === gameBoard[4] &&
-				player === gameBoard[7]) ||
-			(player === gameBoard[2] &&
-				player === gameBoard[5] &&
-				player === gameBoard[8]) ||
+			(player === Gameboard.gameBoard[0] &&
+				player === Gameboard.gameBoard[3] &&
+				player === Gameboard.gameBoard[6]) ||
+			(player === Gameboard.gameBoard[1] &&
+				player === Gameboard.gameBoard[4] &&
+				player === Gameboard.gameBoard[7]) ||
+			(player === Gameboard.gameBoard[2] &&
+				player === Gameboard.gameBoard[5] &&
+				player === Gameboard.gameBoard[8]) ||
 			// check diagonal
-			(player === gameBoard[0] &&
-				player === gameBoard[4] &&
-				player === gameBoard[8]) ||
-			(player === gameBoard[2] &&
-				player === gameBoard[4] &&
-				player === gameBoard[6])
+			(player === Gameboard.gameBoard[0] &&
+				player === Gameboard.gameBoard[4] &&
+				player === Gameboard.gameBoard[8]) ||
+			(player === Gameboard.gameBoard[2] &&
+				player === Gameboard.gameBoard[4] &&
+				player === Gameboard.gameBoard[6])
 		)
 			return true;
 	}
