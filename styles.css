@@ -60,9 +60,8 @@ main.hide {
 	background-color: #2d3e59;
 	font-size: 1.5rem;
 	padding: 15px;
-	width: 400px;
-	height: 350px;
-
+	width: 500px;
+	height: 450px;
 	border-radius: 10px;
 }
 
@@ -114,30 +113,23 @@ input::placeholder {
 	font-size: 1.3rem;
 }
 
-/* ERROR CHECK */
-
-.error1,
-.error2 {
-	font-weight: bold;
-	font-size: 1rem;
-	color: red;
-}
-
 /* MODES */
 
 .mode1,
 .mode2 {
 	display: flex;
 	justify-content: center;
+	margin-top: 15px;
 }
 .selection-1,
 .selection-2 {
+	margin-top: 30px;
 	display: flex;
-	flex-direction: column;
+	gap: 20px;
 	justify-content: center;
 }
-.button-container1 > button,
-.button-container2 > button {
+.selection-1 > button,
+.selection-2 > button {
 	width: 150px;
 	height: 50px;
 	border-radius: 5px;
@@ -147,17 +139,54 @@ input::placeholder {
 	font-size: 1.3rem;
 	margin-top: 15px;
 }
+
+.button-container1,
+.button-container2 {
+	display: grid;
+
+	gap: 30px;
+}
+
 .selection-1 > button:hover,
 .selection-2 > button:hover {
 	background-color: #313132;
 }
 
 #selectedOne {
-	background-color: #0369a1 !important;
+	background-color: #0369a1;
 }
 
 #selectedTwo {
-	background-color: #0369a1 !important;
+	background-color: #0369a1;
+}
+
+.ai-difficulty-1,
+.ai-difficulty-2 {
+	display: flex;
+	gap: 15px;
+}
+
+.ai-difficulty-1 > button.selected,
+.ai-difficulty-2 > button.selected {
+	background-color: #0369a1;
+}
+
+.ai-difficulty-1 > button,
+.ai-difficulty-2 > button {
+	width: 100px;
+	height: 50px;
+	border: none;
+	border-radius: 5px;
+	background-color: transparent;
+	font-size: 1rem;
+	color: #7dd3fc;
+	font-weight: bold;
+	border: 2px solid #7dd3fc;
+}
+
+.ai-difficulty-1.hide,
+.ai-difficulty-2.hide {
+	display: none;
 }
 
 .start-game {

@@ -7,11 +7,83 @@ const menu = (function () {
 	const inputTwo = document.querySelector("#input2");
 	const playerOneInfo = document.querySelector(".playerOneInfo");
 	const playerTwoInfo = document.querySelector(".playerTwoInfo");
+	const aiDifficultyOne = document.querySelector(".ai-difficulty-1");
+	const aiDifficultyTwo = document.querySelector(".ai-difficulty-2");
 	homeButton.addEventListener("click", () => window.location.reload());
 
-	let playerOneMode = "Player";
-	let playerTwoMode = "Player";
+	let playerOneSelected = "Player";
+	let playerTwoSelected = "Player";
 	let players = [];
+	const playerOneMode = document.querySelector(".player-select-1");
+	const aiOneMode = document.querySelector(".ai-select-1");
+	const playerTwoMode = document.querySelector(".player-select-2");
+	const aiTwoMode = document.querySelector(".ai-select-2");
+
+	let aiDifficultyOneStored = ["Easy"];
+
+	for (const diff1 of aiDifficultyOne.children) {
+		diff1.addEventListener("click", () => {
+			unselectDifficultyOne();
+			diff1.classList.add("selected");
+			aiDifficultyOneStored.length = 0;
+			aiDifficultyOneStored.push(diff1.textContent);
+		});
+	}
+
+	function unselectDifficultyOne() {
+		for (const selectedItem of aiDifficultyOne.children) {
+			selectedItem.classList.remove("selected");
+		}
+	}
+
+	let aiDifficultyTwoStored = ["Easy"];
+
+	for (const diff2 of aiDifficultyTwo.children) {
+		diff2.addEventListener("click", () => {
+			unselectDifficultyTwo();
+			diff2.classList.add("selected");
+			aiDifficultyTwoStored.length = 0;
+			aiDifficultyTwoStored.push(diff2.textContent);
+		});
+	}
+
+	function unselectDifficultyTwo() {
+		for (const selectedItemTwo of aiDifficultyTwo.children) {
+			selectedItemTwo.classList.remove("selected");
+		}
+	}
+
+	playerOneMode.addEventListener("click", () => {
+		playerOneMode.setAttribute("id", "selectedOne");
+		aiOneMode.setAttribute("id", "");
+		playerOneSelected = "Player";
+		aiDifficultyOne.classList.add("hide");
+		unselectDifficultyOne();
+		aiDifficultyOne.children[0].classList.add("selected");
+	});
+
+	playerTwoMode.addEventListener("click", () => {
+		playerTwoMode.setAttribute("id", "selectedOne");
+		aiTwoMode.setAttribute("id", "");
+		playerTwoSelected = "Player";
+		aiDifficultyTwo.classList.add("hide");
+		unselectDifficultyTwo();
+		aiDifficultyTwo.children[0].classList.add("selected");
+	});
+
+	aiOneMode.addEventListener("click", () => {
+		aiOneMode.setAttribute("id", "selectedOne");
+		playerOneMode.setAttribute("id", "");
+		playerOneSelected = "AI";
+		aiDifficultyOne.classList.remove("hide");
+	});
+
+	aiTwoMode.addEventListener("click", () => {
+		aiTwoMode.setAttribute("id", "selectedOne");
+		playerTwoMode.setAttribute("id", "");
+		playerTwoSelected = "AI";
+		aiDifficultyTwo.classList.remove("hide");
+	});
 
 	function showGameboard() {
 		if (!inputOne.value) inputOne.value = "Player 1";
@@ -24,10 +96,43 @@ const menu = (function () {
 	}
 
 	function pushPlayer() {
-		const playerOne = createPlayer(inputOne.value, "X", playerOneMode);
-		const playerTwo = createPlayer(inputTwo.value, "O", playerTwoMode);
-		players.push(playerOne, playerTwo);
-		console.log(playerOne, playerTwo);
+		if (playerOneSelected === "AI") {
+			const aiOne = createPlayer(
+				inputOne.value,
+				"X",
+				playerOneSelected,
+				aiDifficultyOneStored[0]
+			);
+			playGame.getRandomAiMove("X");
+			players.push(aiOne);
+		} else {
+			const playerOne = createPlayer(
+				inputOne.value,
+				"X",
+				playerOneSelected
+			);
+
+			players.push(playerOne);
+		}
+
+		if (playerTwoSelected === "AI") {
+			const aiTwo = createPlayer(
+				inputTwo.value,
+				"O",
+				playerTwoSelected,
+				aiDifficultyTwoStored[0]
+			);
+			playGame.getRandomAiMove("O");
+			players.push(aiTwo);
+		} else {
+			const playerTwo = createPlayer(
+				inputTwo.value,
+				"O",
+				playerTwoSelected
+			);
+			players.push(playerTwo);
+		}
+		console.log(players);
 	}
 
 	startGame.addEventListener("click", showGameboard);
@@ -64,19 +169,44 @@ const playGame = (function () {
 	for (const square of board.children) {
 		square.classList.toggle("pointerEvents");
 		square.addEventListener("click", () => {
-			if (!Gameboard.gameBoard[square.dataset.board]) {
+			const squarePosition = square.dataset.board;
+
+			if (!Gameboard.gameBoard[squarePosition]) {
+				// if (menu.players[0].mode === "AI") {
+				// 	getRandomAiMove(square.textContent);
+				// }
 				if (turn === playerOne) {
 					square.textContent = turn;
-					Gameboard.gameBoard[square.dataset.board] = turn;
+					Gameboard.gameBoard[squarePosition] = turn;
 					turn = playerTwo;
 				} else {
 					square.textContent = turn;
-					Gameboard.gameBoard[square.dataset.board] = turn;
+					Gameboard.gameBoard[squarePosition] = turn;
 					turn = playerOne;
 				}
+				console.log(Gameboard.gameBoard);
+				checkWinner();
 			}
-			checkWinner();
 		});
+	}
+
+	function getRandomAiMove(squareMarker) {
+		let validAiMoves = [];
+
+		Gameboard.gameBoard.filter((item) => {
+			if (!item) validAiMoves.push(item);
+		});
+		let movePosition = Math.floor(Math.random() * validAiMoves.length);
+		Gameboard.gameBoard[movePosition] = squareMarker;
+		aiMove(movePosition, squareMarker);
+		return squareMarker;
+	}
+
+	function aiMove(movePosition, marker) {
+		const units = document.querySelectorAll(".unit");
+		setTimeout(() => {
+			return (units[movePosition].textContent = marker);
+		}, 250);
 	}
 
 	playAgain.addEventListener("click", resetBoard);
@@ -158,8 +288,10 @@ const playGame = (function () {
 		)
 			return true;
 	}
+	return { getRandomAiMove };
 })();
 
-function createPlayer(name, symbol, mode) {
-	return { name, symbol, mode };
+function createPlayer(name, marker, mode, difficulty) {
+	if (difficulty) return { name, marker, mode, difficulty };
+	else return { name, marker, mode };
 }
