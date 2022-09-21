@@ -195,8 +195,9 @@ const playGame = (function () {
 					Gameboard.gameBoard[squarePosition] = "X";
 					if (checkWinner(playerOne)) return;
 					getRandomAiMove("O");
+					console.log(Gameboard.gameBoard);
 				}
-				console.log(Gameboard.gameBoard);
+
 				checkWinner();
 			}
 		});
@@ -227,10 +228,11 @@ const playGame = (function () {
 		rounds.textContent = `Round ${(round += 1)}`;
 		winnerTitle.textContent = "ㅤ";
 		winner.textContent = "ㅤ";
-		playerStartsFirst();
+
 		Gameboard.gameBoard = ["", "", "", "", "", "", "", "", ""];
 		unit.forEach((item) => (item.textContent = ""));
 		if (unit[0].classList.contains("pointerEvents")) toggleUnitEvents();
+		playerStartsFirst();
 	}
 
 	let playerOneWinCount = 0;
