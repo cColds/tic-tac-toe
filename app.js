@@ -94,7 +94,37 @@ const menu = (function () {
 		game.classList.toggle("hide");
 		pushPlayer();
 	}
+	function aiVsAi() {
+		setTimeout(() => {
+			playGame.getRandomAiMove("O");
+		}, 500);
 
+		setTimeout(() => {
+			playGame.getRandomAiMove("X");
+		}, 1000);
+
+		setTimeout(() => {
+			playGame.getRandomAiMove("O");
+		}, 1500);
+		setTimeout(() => {
+			playGame.getRandomAiMove("X");
+		}, 2000);
+		setTimeout(() => {
+			playGame.getRandomAiMove("O");
+		}, 2500);
+		setTimeout(() => {
+			playGame.getRandomAiMove("X");
+		}, 3000);
+		setTimeout(() => {
+			playGame.getRandomAiMove("O");
+		}, 3500);
+		setTimeout(() => {
+			playGame.getRandomAiMove("X");
+		}, 4000);
+		setTimeout(() => {
+			playGame.getRandomAiMove("O");
+		}, 4500);
+	}
 	function pushPlayer() {
 		if (playerOneSelected === "AI") {
 			const aiOne = createPlayer(
@@ -103,8 +133,10 @@ const menu = (function () {
 				playerOneSelected,
 				aiDifficultyOneStored[0]
 			);
-			playGame.getRandomAiMove("X");
+			console.log(players);
 			players.push(aiOne);
+
+			playGame.getRandomAiMove("X");
 		} else {
 			const playerOne = createPlayer(
 				inputOne.value,
@@ -132,12 +164,20 @@ const menu = (function () {
 			);
 			players.push(playerTwo);
 		}
+
+		if (playerOneSelected === "AI" && playerTwoSelected === "AI") {
+			Gameboard.gameBoard = ["", "", "", "", "", "", "", "", ""];
+			for (const aiBoard of playGame.board.children) {
+				aiBoard.textContent = "";
+			}
+			aiVsAi();
+		}
 		console.log(players);
 	}
 
 	startGame.addEventListener("click", showGameboard);
 
-	return { players };
+	return { players, aiVsAi };
 })();
 
 const Gameboard = (function () {
@@ -163,8 +203,12 @@ const playGame = (function () {
 		turn = round;
 		if (turn % 2 !== 0) turn = playerOne;
 		else turn = playerTwo;
+		if (turn === playerOne) {
+			if (menu.players[0])
+				if (menu.players[0].mode === "AI") getRandomAiMove("X");
+		}
 		if (turn === playerTwo) {
-			getRandomAiMove("O");
+			if (menu.players[1].mode === "AI") getRandomAiMove("O");
 		}
 	}
 	playerStartsFirst();
@@ -196,6 +240,14 @@ const playGame = (function () {
 					if (checkWinner(playerOne)) return;
 					getRandomAiMove("O");
 					console.log(Gameboard.gameBoard);
+				} else if (
+					menu.players[0].mode === "AI" &&
+					menu.players[1].mode === "Player"
+				) {
+					square.textContent = "O";
+					Gameboard.gameBoard[squarePosition] = "O";
+					if (checkWinner(playerTwo)) return;
+					getRandomAiMove("X");
 				}
 
 				checkWinner();
@@ -211,6 +263,7 @@ const playGame = (function () {
 		let randomSpot = filtered[Math.floor(Math.random() * filtered.length)];
 
 		Gameboard.gameBoard[randomSpot] = squareMarker;
+
 		aiMove(randomSpot, squareMarker);
 		return squareMarker;
 	}
@@ -220,9 +273,14 @@ const playGame = (function () {
 		setTimeout(() => {
 			return (units[movePosition].textContent = marker);
 		}, 250);
+		if (checkWinner()) return;
 	}
 
-	playAgain.addEventListener("click", resetBoard);
+	playAgain.addEventListener("click", () => {
+		resetBoard();
+		if (menu.players[0].mode === "AI" && menu.players[1].mode === "AI")
+			menu.aiVsAi();
+	});
 
 	function resetBoard() {
 		rounds.textContent = `Round ${(round += 1)}`;
@@ -305,10 +363,8 @@ const playGame = (function () {
 		)
 			return true;
 	}
-	return { getRandomAiMove };
+	return { getRandomAiMove, board, checkWinner, rounds };
 })();
-
-const ai = (function () {})();
 
 function createPlayer(name, marker, mode, difficulty) {
 	if (difficulty) return { name, marker, mode, difficulty };
