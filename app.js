@@ -98,11 +98,9 @@ const menu = (function () {
 		setTimeout(() => {
 			playGame.getRandomAiMove("O");
 		}, 500);
-
 		setTimeout(() => {
 			playGame.getRandomAiMove("X");
 		}, 1000);
-
 		setTimeout(() => {
 			playGame.getRandomAiMove("O");
 		}, 1500);
