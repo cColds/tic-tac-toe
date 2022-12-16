@@ -1,7 +1,3 @@
-# tic-tac-toe
-
-Try: https://ccolds.github.io/tic-tac-toe/
-test
 <div align='center'>
     <h1>Tic-Tac-Toe
     <br>
